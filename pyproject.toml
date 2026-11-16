@@ -1,0 +1,44 @@
+[project]
+name = "ruml-parser"
+version = "1.0.0"
+description = "Providing Pydantic models for RUML and RUML Result"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.14"
+dependencies = [
+    "pydantic>=2.12.0,<3",
+    # Comes with pydantic; declared for `core_schema`, which custom field types need.
+    "pydantic-core>=2.41.1,<3",
+    # EmailStr is only a usable annotation with this installed: pydantic raises
+    # at class definition time, so an import of the models fails without it.
+    "email-validator>=2.3.0,<3",
+    "jsonschema[format-nongpl]>=4.23.0,<5",
+    "referencing>=0.37.0,<0.38",
+    "more-itertools>=11.1.0,<12",
+    # ECMA-262 regular expressions, for `format: regex`.
+    "regress>=2026.9.1,<2027",
+    # The RUML and RUML-Result schemas. Pinned exactly: the models in
+    # ruml_parser/model/ are generated from this very version.
+    "ruml-schema==1.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["ruml_parser"]
+# The workspace's editable install still serves them to other packages' tests.
+exclude = ["ruml_parser/tests"]
+
+[tool.uv]
+exclude-newer = "7 days"
+# Our own package, pinned exactly above: the schemas of a RUML release have to be
+# usable on the day of that release.
+exclude-newer-package = { ruml-schema = false }
+default-groups = ["dev"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.0,<0.17",
+]

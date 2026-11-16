@@ -1,0 +1,2 @@
+# SPDX-FileCopyrightText: 2026 Rulemapping Group GmbH
+# SPDX-License-Identifier: Apache-2.0
